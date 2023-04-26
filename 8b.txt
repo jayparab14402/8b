@@ -1,0 +1,47 @@
+A)Sampling Raster data using Points or Polygons
+A raster grid of maximum temperature in the US is given, we need to extract the temperature at all urban 
+areas and also we will calculate the average temperature for each county in the US.
+Required dataset:
+us.tmax_nohads_ll_20140525_float.tif 2013_Gaz_ua_national.zip tl_2013_us_county.zip
+Required Plugin:
+Point sampling tool
+1.Add raster layer “us.tmax_nohads_ll_20140525_float.tif”.
+2.Click on identify feature tool and then click anywhere on the image, we will see the temperature value at that
+ location as value or band 1 in left pane or in the canvas area.
+3.Add delimited text layer “2013_Gaz_ua_national.txt” which is present in 2013_Gaz_ua_national folder.
+4.On next window click on browse button and select 2013_Gaz_ua_national.txt file, select tab under custom delimiters,
+ the point coordinates are in Latitude and Longitude, so
+select INTPTLONG as X field and INTPTLAT as Y field. Also check the Use spatial index box and then click on OK. 
+Then select CRS as WGS 84.
+5.Now we are ready to extract temperature value from raster layer, but before moving further we need to install 
+“Point sampling tool” plugin if it is not installed.
+6.Click on plugin  analysis  point sampling tool.
+7.In point sampling dialog box, select 2013_Gaz_ua_national as layer containing sampling point, here we need to select
+ fields from input layer that we want in our output layer. Select GEOID and NAME fields. We can sample values from multiple
+ band but here we have only one band so select us.tmax_nohads_II_20140525_float: band 1. Set location and give name for output 
+vector layer as max_temperature_at_urban_locations.shp, then click on Ok button. Once the process is completed click on close button.
+ Also select WGS 84 as CRS on next screen.
+8.New layer is loaded in QGIS, now again we can click on identify tool and click on any point on layer to see the values
+ associated with it.
+9.First part of analysis is over, now we can remove unnecessary layers from qgis. Right click on max_temperature_at_urban_locations 
+in layer pane and select remove, similarly remove 2013_Gaz_ua_national layer.
+10.Now add vector layer “tl_2013_us_county.shp”.
+11.The above layer is added in QGIS, but it is in EPSG: 4269 projection (we can check in property window) which doesn’t match with
+ the raster layer, so we will reproject this layer to EPSG: 4326. Right click on this layer and select Save as…
+12.In save as dialog box select format as ESRI Shapefile, set location for output file and give name of output file as counties.shp. 
+Click on Change button to set the CRS and select WGS 84, check the add saved file to map and then click on Ok.
+13.Uncheck the original layer from layer pane now.
+14.Install “Zonal statistics plugins” if it is not installed.
+15.Click on raster  zonal statistics  zonal statistics.
+16.Select us.tmax_nohads_ll_20140525_float as raster layer and counties as polygon layer containing the zones. Enter ZS_ as the output
+ column prefix. Click on Ok. It may take some time.
+17.Once the processing is completed, select counties layer from layer pane and select identify tool and click on any county polygon. 
+We can see three new attributes as ZS_count, ZS_mean and
+ZS_sum. These attributes contain count of raster pixels, mean of raster pixel values and sum of raster pixel values respectively.
+ We are going to use ZS_mean.
+18.Let’s change the style of this layer to create temperature map. Double click on counties layer from layer pane to open its
+ property window.
+19.Click on style tab. Select graduated style and ZS_mean column. Select color ramp and mode. Click on classify button to create the classes.
+ Click on Ok.
+20.We will see the county polygons styled using average maximum temperature extracted from the raster grid.
+
